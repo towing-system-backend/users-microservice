@@ -25,4 +25,8 @@
     </PackageReference>
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Utils\Core\Src\Infrastructure\PerformanceStats\Repositories\MongoPerformanceLogsRespository.cs\" />
+  </ItemGroup>
+
 </Project>

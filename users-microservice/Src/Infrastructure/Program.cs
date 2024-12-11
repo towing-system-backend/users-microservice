@@ -12,9 +12,11 @@ Env.Load();
 builder.Services.AddSingleton<MongoUserRepository>();
 builder.Services.AddSingleton<MongoEventStore>();
 builder.Services.AddScoped<IdService<string>, GuidGenerator>();
+builder.Services.AddScoped<Logger, DotNetLogger>();
 builder.Services.AddScoped<IMessageBrokerService, RabbitMQService>();
 builder.Services.AddScoped<IEventStore, MongoEventStore>();
 builder.Services.AddScoped<IUserRepository, MongoUserRepository>();
+builder.Services.AddScoped<IPerformanceLogsRepository, MongoPerformanceLogsRespository>();
 builder.Services.AddControllers(options => {
     options.Filters.Add<GlobalExceptionFilter>();
 }); 
