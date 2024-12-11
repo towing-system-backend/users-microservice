@@ -7,12 +7,14 @@ namespace User.Infrastructure
 {
     [ApiController]
     [Route("api/user")]
-    public class UserController(IdService<string> idService, IMessageBrokerService messageBrokerService, IEventStore eventStore, IUserRepository userRepository) : ControllerBase
+    public class UserController(IdService<string> idService, Logger logger, IMessageBrokerService messageBrokerService, IEventStore eventStore, IUserRepository userRepository, IPerformanceLogsRepository performanceLogsRepository) : ControllerBase
     {
         private readonly IdService<string> _idService = idService;
+        private readonly Logger _logger = logger;
         private readonly IMessageBrokerService _messageBrokerService = messageBrokerService;
         private readonly IEventStore _eventStore = eventStore;
         private readonly IUserRepository _userRepository = userRepository;
+        private readonly IPerformanceLogsRepository _performanceLogsRepository = performanceLogsRepository;
 
         [HttpPost("create")]
         public async Task<ObjectResult> CreateUser([FromBody] CreateUserDto createUserDto)
@@ -22,8 +24,8 @@ namespace User.Infrastructure
                 new ExceptionCatcher<RegisterUserCommand, RegisterUserResponse>(
                     new PerfomanceMonitor<RegisterUserCommand, RegisterUserResponse>(
                         new LoggingAspect<RegisterUserCommand, RegisterUserResponse>(
-                            new RegisterUserCommandHandler(_idService, _messageBrokerService, _eventStore, _userRepository)
-                        )
+                            new RegisterUserCommandHandler(_idService, _messageBrokerService, _eventStore, _userRepository), logger
+                        ), _logger, _performanceLogsRepository, "RegisterUserCommandHandler"
                     ), ExceptionParser.Parse
                 );
             var res = await handler.Execute(command);
@@ -39,8 +41,8 @@ namespace User.Infrastructure
                 new ExceptionCatcher<UpdateUserCommand, UpdateUserResponse>(
                     new PerfomanceMonitor<UpdateUserCommand, UpdateUserResponse>(
                         new LoggingAspect<UpdateUserCommand, UpdateUserResponse>(
-                            new UpdateUserCommandHandler(_messageBrokerService, _eventStore, _userRepository)
-                        )
+                            new UpdateUserCommandHandler(_messageBrokerService, _eventStore, _userRepository), logger
+                        ), _logger, _performanceLogsRepository, "UpdateUserCommandHandler"
                     ), ExceptionParser.Parse
                 );
             var res = await handler.Execute(command);
