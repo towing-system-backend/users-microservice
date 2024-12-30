@@ -4,7 +4,7 @@ namespace Application.Core
 {
     public interface IPerformanceLogsRepository
     {
-        public void LogStats(string serviceExecuted, long latencyTime);
+        public void LogStats(string serviceExecuted, string operationType, long latencyTime);
     }
 
     public class MongoPerformanceLogsRespository : IPerformanceLogsRepository
@@ -16,9 +16,9 @@ namespace Application.Core
             IMongoDatabase database = client.GetDatabase(Environment.GetEnvironmentVariable("DATABASE_NAME"));
             _performanceLogsCollection = database.GetCollection<MongoPerformanceLogs>("performance-logs");
         }
-        public async void LogStats(string serviceExecuted, long latencyTime)
+        public async void LogStats(string serviceExecuted, string operationType, long latencyTime)
         {
-            var perfomanceLogs = new MongoPerformanceLogs(serviceExecuted, latencyTime);
+            var perfomanceLogs = new MongoPerformanceLogs(serviceExecuted, operationType, latencyTime);
 
             await _performanceLogsCollection.InsertOneAsync(perfomanceLogs);
         }

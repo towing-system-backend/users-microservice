@@ -15,9 +15,14 @@ namespace User.Application
             if (!userRegistered.HasValue()) return Result<UpdateUserResponse>.MakeError(new UserNotFoundError());
 
             var user = userRegistered.Unwrap();
+            if (command.SupplierCompanyId != null) user.UpdateSupplierCompanyId(new SupplierCompanyId(command.SupplierCompanyId));
             if (command.Name != null) user.UpdateUserName(new UserName(command.Name));
-            if (command.IdentificationNumber != null) user.UpdateUserIdentificationNumber(new UserIdentificationNumber((int)command.IdentificationNumber));
+            if (command.Image != null) user.UpdateUserImage(new UserImage(command.Image));
             if (command.Email != null) user.UpdateUserEmail(new UserEmail(command.Email));
+            if (command.Role != null) user.UpdateUserRole(new UserRole(command.Role));
+            if (command.Status != null) user.UpdateUserStatus(new UserStatus(command.Status));
+            if (command.PhoneNumber != null) user.UpdateUserPhoneNumber(new UserPhoneNumber(command.PhoneNumber));
+            if (command.IdentificationNumber != null) user.UpdateUserIdentificationNumber(new UserIdentificationNumber((int)command.IdentificationNumber));
 
             var events = user.PullEvents();
             await _userRepository.Save(user);

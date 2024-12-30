@@ -5,6 +5,8 @@ using DotNetEnv;
 using Microsoft.IdentityModel.Tokens;
 using MassTransit;
 using System.Text;
+using MassTransit.Transports;
+using RabbitMQ.Contracts;
 
 var builder = WebApplication.CreateBuilder(args);
 Env.Load();
@@ -17,9 +19,19 @@ builder.Services.AddScoped<IMessageBrokerService, RabbitMQService>();
 builder.Services.AddScoped<IEventStore, MongoEventStore>();
 builder.Services.AddScoped<IUserRepository, MongoUserRepository>();
 builder.Services.AddScoped<IPerformanceLogsRepository, MongoPerformanceLogsRespository>();
+builder.Services.AddScoped<UserController>();
+
+
+
+
+
 builder.Services.AddControllers(options => {
     options.Filters.Add<GlobalExceptionFilter>();
-}); 
+});
+
+var certSection = builder.Configuration.GetSection("Kestrel:Endpoints:Https:Certificate");
+certSection["Path"] = Environment.GetEnvironmentVariable("ASPNETCORE_Kestrel_CertificatesDefault_Path")!;
+certSection["Password"] = Environment.GetEnvironmentVariable("ASPNETCORE_Kestrel_CertificatesDefault_Password")!;
 
 builder.Services.AddSwaggerGen(c =>
 {
@@ -42,6 +54,7 @@ builder.Services.AddAuthentication("Bearer")
     });
 builder.Services.AddMassTransit(busConfigurator =>
 {
+    busConfigurator.AddConsumer<CreateUserConsumer>();
     busConfigurator.SetKebabCaseEndpointNameFormatter();
     busConfigurator.UsingRabbitMq((context, configurator) =>
     {

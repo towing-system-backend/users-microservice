@@ -19,13 +19,25 @@ namespace User.Infrastructure
         [HttpPost("create")]
         public async Task<ObjectResult> CreateUser([FromBody] CreateUserDto createUserDto)
         {
-            var command = new RegisterUserCommand(createUserDto.Name, createUserDto.Email, createUserDto.IdentificationNumber);
+
+            var command = new RegisterUserCommand(
+                createUserDto.Id,
+                createUserDto.SupplierCompanyId,
+                createUserDto.Name,
+                createUserDto.Image,
+                createUserDto.Email,
+                createUserDto.Role,
+                createUserDto.Status,
+                createUserDto.PhoneNumber,
+                createUserDto.IdentificationNumber
+            );
+
             var handler = 
                 new ExceptionCatcher<RegisterUserCommand, RegisterUserResponse>(
                     new PerfomanceMonitor<RegisterUserCommand, RegisterUserResponse>(
                         new LoggingAspect<RegisterUserCommand, RegisterUserResponse>(
-                            new RegisterUserCommandHandler(_idService, _messageBrokerService, _eventStore, _userRepository), logger
-                        ), _logger, _performanceLogsRepository, "RegisterUserCommandHandler"
+                            new RegisterUserCommandHandler(_idService, _messageBrokerService, _eventStore, _userRepository), _logger
+                        ), _logger, _performanceLogsRepository, nameof(RegisterUserCommandHandler), "Write"
                     ), ExceptionParser.Parse
                 );
             var res = await handler.Execute(command);
@@ -36,13 +48,24 @@ namespace User.Infrastructure
         [HttpPatch("update")]
         public async Task<ObjectResult> UpdateUser([FromBody] UpdateUserDto updateUserDto)
         {
-            var command = new UpdateUserCommand(updateUserDto.Id, updateUserDto.Name, updateUserDto.Email, updateUserDto.IdentificationNumber);
+            var command = new UpdateUserCommand(
+                updateUserDto.Id,
+                updateUserDto.SupplierCompanyId,
+                updateUserDto.Name,
+                updateUserDto.Image,
+                updateUserDto.Email,
+                updateUserDto.Role,
+                updateUserDto.Status,
+                updateUserDto.PhoneNumber,
+                updateUserDto.IdentificationNumber
+            );
+            
             var handler =
                 new ExceptionCatcher<UpdateUserCommand, UpdateUserResponse>(
                     new PerfomanceMonitor<UpdateUserCommand, UpdateUserResponse>(
                         new LoggingAspect<UpdateUserCommand, UpdateUserResponse>(
-                            new UpdateUserCommandHandler(_messageBrokerService, _eventStore, _userRepository), logger
-                        ), _logger, _performanceLogsRepository, "UpdateUserCommandHandler"
+                            new UpdateUserCommandHandler(_messageBrokerService, _eventStore, _userRepository), _logger
+                        ), _logger, _performanceLogsRepository, nameof(UpdateUserCommandHandler), "Write"
                     ), ExceptionParser.Parse
                 );
             var res = await handler.Execute(command);
