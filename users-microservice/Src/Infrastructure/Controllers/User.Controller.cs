@@ -31,7 +31,7 @@ namespace User.Infrastructure
                 createUserDto.PhoneNumber,
                 createUserDto.IdentificationNumber
             );
-
+            
             var handler = 
                 new ExceptionCatcher<RegisterUserCommand, RegisterUserResponse>(
                     new PerfomanceMonitor<RegisterUserCommand, RegisterUserResponse>(
