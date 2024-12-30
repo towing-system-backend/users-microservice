@@ -4,9 +4,10 @@ using RabbitMQ.Contracts;
 
 namespace Application.Core
 {
-    public class RabbitMQService(IPublishEndpoint publishEndpoint) : IMessageBrokerService
+    public class RabbitMQService(IPublishEndpoint publishEndponint) : IMessageBrokerService
     {
-        private readonly IPublishEndpoint _publishEndpoint = publishEndpoint;
+        private readonly IPublishEndpoint _publishEndpoint = publishEndponint;
+
         public async Task Publish(List<DomainEvent> domainEvents)
         {
             foreach(var @event in domainEvents)
@@ -19,6 +20,6 @@ namespace Application.Core
                 );
                 await _publishEndpoint.Publish(eventType); 
             }
-        }
+        }   
     }
-} 
+}

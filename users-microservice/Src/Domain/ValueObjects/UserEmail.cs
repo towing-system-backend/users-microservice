@@ -4,7 +4,7 @@ namespace User.Domain
 {
     public class UserEmail : IValueObject<UserEmail>
     {
-        private readonly string Value;
+        private readonly string _value;
 
         public UserEmail(string value)
         {
@@ -13,10 +13,10 @@ namespace User.Domain
                 throw new InvalidUserEmailException();
             }
 
-            Value = value;
+            _value = value;
         }
 
-        public string GetValue() => Value;
-        public bool Equals(UserEmail other) => Value == other.Value;
+        public string GetValue() => _value;
+        public bool Equals(UserEmail other) => _value == other._value;
     }
 }
