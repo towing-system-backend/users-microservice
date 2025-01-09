@@ -4,7 +4,6 @@ namespace User.Domain
 {
     public class SupplierCompanyIdUpdatedEvent(string publisherId, string type, SupplierCompanyIdUpdated context) : DomainEvent(publisherId, type, context) { }
 
-
     public class SupplierCompanyIdUpdated(string supplierCompanyId)
     {
         public readonly string SupplierCompanyId = supplierCompanyId;

@@ -1,8 +1,8 @@
 using Application.Core;
+using User.Domain;
 
 namespace User.Application
 {
-    using User.Domain;
     public class UpdateUserCommandHandler(IMessageBrokerService messageBrokerService, IEventStore eventStore, IUserRepository userRepository) : IService<UpdateUserCommand, UpdateUserResponse>
     {
         private readonly IMessageBrokerService _messageBrokerService = messageBrokerService;
