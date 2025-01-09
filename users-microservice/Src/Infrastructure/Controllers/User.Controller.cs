@@ -7,7 +7,14 @@ namespace User.Infrastructure
 {
     [ApiController]
     [Route("api/user")]
-    public class UserController(IdService<string> idService, Logger logger, IMessageBrokerService messageBrokerService, IEventStore eventStore, IUserRepository userRepository, IPerformanceLogsRepository performanceLogsRepository) : ControllerBase
+    public class UserController(
+        IdService<string> idService,
+        Logger logger,
+        IMessageBrokerService messageBrokerService,
+        IEventStore eventStore,
+        IUserRepository userRepository,
+        IPerformanceLogsRepository performanceLogsRepository
+    ) : ControllerBase
     {
         private readonly IdService<string> _idService = idService;
         private readonly Logger _logger = logger;
@@ -36,7 +43,7 @@ namespace User.Infrastructure
                 new ExceptionCatcher<RegisterUserCommand, RegisterUserResponse>(
                     new PerfomanceMonitor<RegisterUserCommand, RegisterUserResponse>(
                         new LoggingAspect<RegisterUserCommand, RegisterUserResponse>(
-                            new RegisterUserCommandHandler(_idService, _messageBrokerService, _eventStore, _userRepository), _logger
+                            new RegisterUserCommandHandler(_messageBrokerService, _eventStore, _userRepository), _logger
                         ), _logger, _performanceLogsRepository, nameof(RegisterUserCommandHandler), "Write"
                     ), ExceptionParser.Parse
                 );

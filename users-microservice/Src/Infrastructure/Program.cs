@@ -5,8 +5,6 @@ using DotNetEnv;
 using Microsoft.IdentityModel.Tokens;
 using MassTransit;
 using System.Text;
-using MassTransit.Transports;
-using RabbitMQ.Contracts;
 
 var builder = WebApplication.CreateBuilder(args);
 Env.Load();
@@ -20,11 +18,6 @@ builder.Services.AddScoped<IEventStore, MongoEventStore>();
 builder.Services.AddScoped<IUserRepository, MongoUserRepository>();
 builder.Services.AddScoped<IPerformanceLogsRepository, MongoPerformanceLogsRespository>();
 builder.Services.AddScoped<UserController>();
-
-
-
-
-
 builder.Services.AddControllers(options => {
     options.Filters.Add<GlobalExceptionFilter>();
 });
