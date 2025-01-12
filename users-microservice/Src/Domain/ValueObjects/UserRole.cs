@@ -5,7 +5,7 @@ namespace User.Domain
     public class UserRole : IValueObject<UserRole>
     {
         private readonly string _value;
-        private static readonly string[] ValidRoles = { "Admin", "TowDriver", "Employee", "CabinOperator" };
+        private static readonly string[] ValidRoles = { "Admin", "Provider", "TowDriver", "Employee", "CabinOperator" };
 
         public UserRole(string value)
         {
