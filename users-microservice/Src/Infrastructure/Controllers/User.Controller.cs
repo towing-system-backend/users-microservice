@@ -2,6 +2,7 @@
 using User.Application;
 using Microsoft.AspNetCore.Mvc;
 using User.Domain;
+using Microsoft.AspNetCore.Authorization;
 
 namespace User.Infrastructure
 {
@@ -23,7 +24,6 @@ namespace User.Infrastructure
         private readonly IUserRepository _userRepository = userRepository;
         private readonly IPerformanceLogsRepository _performanceLogsRepository = performanceLogsRepository;
 
-        [HttpPost("create")]
         public async Task<ObjectResult> CreateUser([FromBody] CreateUserDto createUserDto)
         {
 
@@ -51,7 +51,7 @@ namespace User.Infrastructure
 
             return Ok(res.Unwrap());
         }
-
+        [Authorize(Roles = "Admin,Provider")]
         [HttpPatch("update")]
         public async Task<ObjectResult> UpdateUser([FromBody] UpdateUserDto updateUserDto)
         {
