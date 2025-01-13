@@ -15,6 +15,7 @@ namespace User.Extensions
             services.AddScoped<IdService<string>, GuidGenerator>();
             services.AddScoped<Logger, DotNetLogger>();
             services.AddScoped<IMessageBrokerService, RabbitMQService>();
+            services.AddScoped<UserController>();
             services.AddSingleton<IEventStore, MongoEventStore>();
             services.AddSingleton<IUserRepository, MongoUserRepository>();
             services.AddSingleton<IPerformanceLogsRepository, MongoPerformanceLogsRespository>();
