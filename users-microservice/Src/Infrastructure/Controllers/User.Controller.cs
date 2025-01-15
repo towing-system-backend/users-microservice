@@ -24,9 +24,9 @@ namespace User.Infrastructure
         private readonly IUserRepository _userRepository = userRepository;
         private readonly IPerformanceLogsRepository _performanceLogsRepository = performanceLogsRepository;
 
+        [ApiExplorerSettings(IgnoreApi = true)]
         public async Task<ObjectResult> CreateUser([FromBody] CreateUserDto createUserDto)
         {
-
             var command = new RegisterUserCommand(
                 createUserDto.Id,
                 createUserDto.SupplierCompanyId,
@@ -77,6 +77,15 @@ namespace User.Infrastructure
                 );
             var res = await handler.Execute(command);
 
+            return Ok(res.Unwrap());
+        }
+
+        [HttpGet("find/{id}")]
+        [Authorize(Roles = "Admin,Provider")]
+        public async Task<ObjectResult> FindOrderById(string id)
+        {
+            var query = new GetUserById();
+            var res = await query.Execute(id);
             return Ok(res.Unwrap());
         }
     }
