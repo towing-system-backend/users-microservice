@@ -1,27 +1,28 @@
-﻿using IOptional = Application.Core.Optional<User.Infrastructure.GetUserByIdResponse>;
-using MongoDB.Driver;
+﻿using MongoDB.Driver;
+using Application.Core;
+using User.Application;
 
 namespace User.Infrastructure
 {
-    public class GetUserById
+    public class FindUserByIdQuery : IService<string, FindUserByIdResponse>
     {
         private readonly IMongoCollection<MongoUser> _userCollection;
-        public GetUserById()
+        public FindUserByIdQuery()
         {
             MongoClient client = new MongoClient(Environment.GetEnvironmentVariable("CONNECTION_URI"));
             IMongoDatabase database = client.GetDatabase(Environment.GetEnvironmentVariable("DATABASE_NAME"));
             _userCollection = database.GetCollection<MongoUser>("users");
         }
 
-        public async Task<IOptional> Execute(string id)
+        public async Task<Result<FindUserByIdResponse>> Execute(string id)
         {
             var filter = Builders<MongoUser>.Filter.Eq(user => user.UserId, id);
             var res = await _userCollection.Find(filter).FirstOrDefaultAsync();
 
-            if (res == null) return IOptional.Empty();
+            if (res == null) return Result<FindUserByIdResponse>.MakeError(new UserNotFoundError());
 
-            return IOptional.Of(
-                new GetUserByIdResponse(
+            return Result<FindUserByIdResponse>.MakeSuccess(
+                new FindUserByIdResponse(
                     res.UserId,
                     res.SupplierCompanyId,
                     res.Name,

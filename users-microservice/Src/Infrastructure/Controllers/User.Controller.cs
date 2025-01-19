@@ -51,7 +51,7 @@ namespace User.Infrastructure
 
             return Ok(res.Unwrap());
         }
-        [Authorize(Roles = "Admin,Provider")]
+        [Authorize(Roles = "Admin, Provider")]
         [HttpPatch("update")]
         public async Task<ObjectResult> UpdateUser([FromBody] UpdateUserDto updateUserDto)
         {
@@ -81,11 +81,36 @@ namespace User.Infrastructure
         }
 
         [HttpGet("find/{id}")]
-        [Authorize(Roles = "Admin,Provider")]
-        public async Task<ObjectResult> FindOrderById(string id)
+        [Authorize(Roles = "Admin, Provider")]
+        public async Task<ObjectResult> FindUserById(string id)
         {
-            var query = new GetUserById();
+            var query = 
+                new ExceptionCatcher<string, FindUserByIdResponse>(
+                    new PerfomanceMonitor<string, FindUserByIdResponse>(
+                        new LoggingAspect<string, FindUserByIdResponse>(
+                            new FindUserByIdQuery(), _logger
+                        ), _logger, _performanceLogsRepository, nameof(FindUserByIdQuery), "Read"
+                    ), ExceptionParser.Parse
+                );
             var res = await query.Execute(id);
+
+            return Ok(res.Unwrap());
+        }
+
+        [HttpGet("find/AllUser")]
+        [Authorize(Roles = "Admin, Provider")]
+        public async Task<ObjectResult> FindAllUsers()
+        {
+            var query =
+                new ExceptionCatcher<string, List<FindAllUsersResponse>>(
+                    new PerfomanceMonitor<string, List<FindAllUsersResponse>>(
+                        new LoggingAspect<string, List<FindAllUsersResponse>>(
+                            new FindAllUsersQuery(), _logger
+                        ), _logger, _performanceLogsRepository, nameof(FindAllUsersQuery), "Read"
+                    ), ExceptionParser.Parse
+                );
+            var res = await query.Execute("");
+
             return Ok(res.Unwrap());
         }
     }

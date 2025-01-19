@@ -1,8 +1,7 @@
 ﻿namespace User.Infrastructure
 {
-    public record GetUserByIdResponse(
-
-        string UserId,
+    public record FindAllUsersResponse(
+        string Id,
         string SupplierCompanyId,
         string Name,
         string Image,
