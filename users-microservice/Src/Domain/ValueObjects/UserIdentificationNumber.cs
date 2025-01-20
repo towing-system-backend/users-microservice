@@ -4,7 +4,7 @@ namespace User.Domain
 {
     public class UserIdentificationNumber : IValueObject<UserIdentificationNumber>
     {
-        private readonly int Value;
+        private readonly int _value;
 
         public UserIdentificationNumber(int value)
         {
@@ -13,10 +13,10 @@ namespace User.Domain
                 throw new InvalidUserIdentificationNumberException();
             }
 
-            Value = value;
+            _value = value;
         }
 
-        public int GetValue() => Value;
-        public bool Equals(UserIdentificationNumber other) => Value == other.Value;
+        public int GetValue() => _value;
+        public bool Equals(UserIdentificationNumber other) => _value == other._value;
     }
 }

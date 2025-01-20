@@ -8,12 +8,12 @@ namespace User.Domain
     {
         public readonly string Email = email;
 
-        static public UserEmailUpdatedEvent CreateEvent(UserId publisherId, UserEmail email)
+        public static UserEmailUpdatedEvent CreateEvent(UserId publisherId, UserEmail email)
         {
             return new UserEmailUpdatedEvent(
-                publisherId.GetValue(),
-                typeof(UserEmailUpdated).Name,
-                new UserEmailUpdated(
+                    publisherId.GetValue(),
+                    typeof(UserEmailUpdated).Name,
+                    new UserEmailUpdated(
                     email.GetValue()
                 )
             );
