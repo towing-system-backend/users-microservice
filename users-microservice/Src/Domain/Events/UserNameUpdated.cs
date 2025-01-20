@@ -11,9 +11,9 @@ namespace User.Domain
         public static UserNameUpdatedEvent CreateEvent(UserId publisherId, UserName userName)
         {
             return new UserNameUpdatedEvent(
-                publisherId.GetValue(),
-                typeof(UserNameUpdated).Name,
-                new UserNameUpdated(
+                    publisherId.GetValue(),
+                    typeof(UserNameUpdated).Name,
+                    new UserNameUpdated(
                     userName.GetValue()
                 )
             );

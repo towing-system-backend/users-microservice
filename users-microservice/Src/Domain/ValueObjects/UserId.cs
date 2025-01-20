@@ -4,7 +4,7 @@ namespace User.Domain
 {
     public class UserId : IValueObject<UserId>
     {
-        private readonly string Value;
+        private readonly string _value;
 
         public UserId(string value)
         {
@@ -13,10 +13,10 @@ namespace User.Domain
                 throw new InvalidUserIdException();
             }
 
-            Value = value;
+            _value = value;
         }
 
-        public string GetValue() => Value;
-        public bool Equals(UserId other) => Value == other.Value;
+        public string GetValue() => _value;
+        public bool Equals(UserId other) => _value == other._value;
     }
 }

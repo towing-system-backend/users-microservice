@@ -8,12 +8,12 @@ namespace User.Domain
     {
         public readonly int IdentificationNumber = identificationNumber;
 
-        static public UserIdentificationNumberUpdatedEvent CreateEvent(UserId publisherId, UserIdentificationNumber identificationNumber)
+        public static UserIdentificationNumberUpdatedEvent CreateEvent(UserId publisherId, UserIdentificationNumber identificationNumber)
         {
             return new UserIdentificationNumberUpdatedEvent(
-                publisherId.GetValue(),
-                typeof(UserIdentificationNumberUpdated).Name,
-                new UserIdentificationNumberUpdated(
+                    publisherId.GetValue(),
+                    typeof(UserIdentificationNumberUpdated).Name,
+                    new UserIdentificationNumberUpdated(
                     identificationNumber.GetValue()
                 )
             );
