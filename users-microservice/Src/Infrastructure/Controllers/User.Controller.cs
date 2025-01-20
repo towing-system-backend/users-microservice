@@ -25,6 +25,7 @@ namespace User.Infrastructure
         private readonly IPerformanceLogsRepository _performanceLogsRepository = performanceLogsRepository;
 
         [ApiExplorerSettings(IgnoreApi = true)]
+        [HttpPost("create")]
         public async Task<ObjectResult> CreateUser([FromBody] CreateUserDto createUserDto)
         {
             var command = new RegisterUserCommand(
@@ -38,8 +39,8 @@ namespace User.Infrastructure
                 createUserDto.PhoneNumber,
                 createUserDto.IdentificationNumber
             );
-            
-            var handler = 
+
+            var handler =
                 new ExceptionCatcher<RegisterUserCommand, RegisterUserResponse>(
                     new PerfomanceMonitor<RegisterUserCommand, RegisterUserResponse>(
                         new LoggingAspect<RegisterUserCommand, RegisterUserResponse>(
@@ -66,7 +67,7 @@ namespace User.Infrastructure
                 updateUserDto.PhoneNumber,
                 updateUserDto.IdentificationNumber
             );
-            
+
             var handler =
                 new ExceptionCatcher<UpdateUserCommand, UpdateUserResponse>(
                     new PerfomanceMonitor<UpdateUserCommand, UpdateUserResponse>(
@@ -84,7 +85,7 @@ namespace User.Infrastructure
         [Authorize(Roles = "Admin, Provider")]
         public async Task<ObjectResult> FindUserById(string id)
         {
-            var query = 
+            var query =
                 new ExceptionCatcher<string, FindUserByIdResponse>(
                     new PerfomanceMonitor<string, FindUserByIdResponse>(
                         new LoggingAspect<string, FindUserByIdResponse>(
@@ -97,7 +98,7 @@ namespace User.Infrastructure
             return Ok(res.Unwrap());
         }
 
-        [HttpGet("find/AllUser")]
+        [HttpGet("  ")]
         [Authorize(Roles = "Admin, Provider")]
         public async Task<ObjectResult> FindAllUsers()
         {
@@ -107,6 +108,23 @@ namespace User.Infrastructure
                         new LoggingAspect<string, List<FindAllUsersResponse>>(
                             new FindAllUsersQuery(), _logger
                         ), _logger, _performanceLogsRepository, nameof(FindAllUsersQuery), "Read"
+                    ), ExceptionParser.Parse
+                );
+            var res = await query.Execute("");
+
+            return Ok(res.Unwrap());
+        }
+
+        [HttpGet("find/UsersName")]
+        [Authorize(Roles = "Admin, Provider")]
+        public async Task<ObjectResult> FindUsersName()
+        {
+            var query =
+                new ExceptionCatcher<string, List<FindUsersNameResponse>>(
+                    new PerfomanceMonitor<string, List<FindUsersNameResponse>>(
+                        new LoggingAspect<string, List<FindUsersNameResponse>>(
+                            new FindUsersNameQuery(), _logger
+                        ), _logger, _performanceLogsRepository, nameof(FindUsersNameQuery), "Read"
                     ), ExceptionParser.Parse
                 );
             var res = await query.Execute("");
