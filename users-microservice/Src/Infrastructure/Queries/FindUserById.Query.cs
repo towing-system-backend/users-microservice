@@ -9,8 +9,8 @@ namespace User.Infrastructure
         private readonly IMongoCollection<MongoUser> _userCollection;
         public FindUserByIdQuery()
         {
-            MongoClient client = new MongoClient(Environment.GetEnvironmentVariable("CONNECTION_URI"));
-            IMongoDatabase database = client.GetDatabase(Environment.GetEnvironmentVariable("DATABASE_NAME"));
+            MongoClient client = new MongoClient(Environment.GetEnvironmentVariable("CONNECTION_URI_READ_MODELS"));
+            IMongoDatabase database = client.GetDatabase(Environment.GetEnvironmentVariable("DATABASE_NAME_READ_MODELS"));
             _userCollection = database.GetCollection<MongoUser>("users");
         }
 

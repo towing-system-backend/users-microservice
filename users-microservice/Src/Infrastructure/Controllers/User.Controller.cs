@@ -86,11 +86,11 @@ namespace User.Infrastructure
         public async Task<ObjectResult> FindUserById(string id)
         {
             var query = new FindUserByIdQuery();
-            var res = await query.Execute("");
+            var res = await query.Execute(id);
             return Ok(res.Unwrap());
         }
 
-        [HttpGet("  ")]
+        [HttpGet("find/all")]
         [Authorize(Roles = "Admin, Provider")]
         public async Task<ObjectResult> FindAllUsers()
         {
@@ -99,7 +99,7 @@ namespace User.Infrastructure
             return Ok(res.Unwrap());
         }
 
-        [HttpGet("find/UsersName")]
+        [HttpGet("find/names/users")]
         [Authorize(Roles = "Admin, Provider")]
         public async Task<ObjectResult> FindUsersName()
         {
